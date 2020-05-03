@@ -9,7 +9,16 @@ namespace WebApplication1.Tenant
     public class TenantDbContext : DbContext
     {
         public DbSet<Tenant> Tenants { get; set; }
-        public TenantDbContext(DbContextOptions<TenantDbContext> options) : base(options) { }
+        public TenantDbContext(DbContextOptions<TenantDbContext> options) : base(options) 
+        {
+            /* 
+             * Using Migration to creat the database if it does not exist.
+             * If you dont have a migration, you can use this.Database.EnsureCreated()
+             * and it will create the database without a migration
+             */
+
+            this.Database.Migrate();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -14,7 +14,6 @@ namespace WebApplication1.Controllers
 
         public EmployeeController(AppDbContext context)
         {
-            context.Database.EnsureCreated();
             this.context = context;
         }
 

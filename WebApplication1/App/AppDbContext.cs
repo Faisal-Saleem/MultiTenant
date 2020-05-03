@@ -12,10 +12,18 @@ namespace WebApplication1.App
     public class AppDbContext : DbContext
     {
         public DbSet<Employee> Employees { get; set; }
+
+        /*  
+         *  To get ConnectionString from database for a specific Tenant. 
+         *  Instead of returning connection string, tenantProvider return Tenant for future use
+        */
+
         public ITenantProvider tenantProvider;
+
         public AppDbContext(DbContextOptions<AppDbContext> options, ITenantProvider tenantProvider): base(options)
         {
             this.tenantProvider = tenantProvider;
+            this.Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -23,10 +31,10 @@ namespace WebApplication1.App
             base.OnConfiguring(optionsBuilder);
             if (tenantProvider.GetTenant() != null)
             {
-                optionsBuilder.UseSqlServer(tenantProvider.GetTenant().ConnectionString.ToString());
+                optionsBuilder.UseSqlServer(tenantProvider.GetTenant().ConnectionString);
             }
-
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
